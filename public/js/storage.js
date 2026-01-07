@@ -47,8 +47,8 @@ function compressImage(file, maxWidth, quality) {
 
 // 2. CORE: Upload Function
 async function uploadFileToCloudinary(file) {
-    const CLOUD_NAME = "dvkyuijdp";
-    const UPLOAD_PRESET = "student_uploads";
+    const CLOUD_NAME = "//Cloudinary API KEY Name";
+    const UPLOAD_PRESET = "//Cloudinary Upload Preset";
 
     let resourceType = 'raw';
     if (file.type.startsWith('image/')) {
