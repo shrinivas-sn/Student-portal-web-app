@@ -1,54 +1,68 @@
-.profile-pic {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
+/* --- Global Styles --- */
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
 }
-.student-card {
-    transition: all 0.3s ease;
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
-.student-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-.custom-field-input {
-    display: none;
-}
-.custom-field-input.active {
-    display: block;
-}
-.document-thumbnail {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-}
-#previewImage {
-    max-width: 200px;
-    max-height: 200px;
-}
+
+/* Sidebar Transition */
 .sidebar {
-    transition: all 0.3s ease;
+    transition: width 0.3s ease, transform 0.3s ease;
 }
+
+/* Mobile Sidebar */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
+        width: 100%; 
         position: fixed;
-        z-index: 50;
         height: 100vh;
+        z-index: 40;
     }
     .sidebar.active {
         transform: translateX(0);
     }
 }
-/* Loading Spinner */
-.loader {
-    border: 5px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 5px solid #3498db;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
+
+/* --- Toast Notification Animations --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* --- NEW: Voice Command Pulse Animation --- */
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+.listening-mode {
+    background-color: #ef4444 !important; /* Red */
+    color: white !important;
+    animation: pulse-red 1.5s infinite;
 }

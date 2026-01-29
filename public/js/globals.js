@@ -10,19 +10,33 @@ let currentClass = null;
 let currentGender = null;
 let currentStudentId = null;
 
+// NEW: Dual-Mode Switcher
+// Default is TRUE (Demo Mode) until an admin logs in
+let isDemoMode = true; 
+
 // Temporary vars
 let pendingDocuments = []; 
 let currentFaceDescriptor = null; 
 
-// Local Cache to prevent duplicate attendance saves
+// Local Cache
 let todaysAttendance = [];
-// New: Store which class report is currently being viewed on dashboard
 let currentReportClass = null;
 
 const AUTHORIZED_EMAILS = [
     "shrinivassn772001@gmail.com",
-    "vsnemagoudar1978@gmail.com" ,
+    "vsnemagoudar1978@gmail.com",
+    "reubenwenisch@gmail.com" ,
+    "akashguruvan@gmail.com"
 ];
+
+// --- HELPER: Database Switcher ---
+// All DB calls must use this function instead of hardcoding 'students'
+function getCollectionName(baseName) {
+    if (isDemoMode) {
+        return `demo_${baseName}`; // e.g., 'demo_students'
+    }
+    return baseName; // e.g., 'students'
+}
 
 // --- DOM ELEMENTS ---
 const loadingScreen = document.getElementById('loading-screen');
@@ -30,6 +44,10 @@ const signinScreen = document.getElementById('signin-screen');
 const app = document.getElementById('app');
 const sidebar = document.querySelector('.sidebar');
 const mainContent = document.getElementById('main-content');
+// Toast Container
+const toastContainer = document.getElementById('toast-container');
+// Voice Command Button
+const voiceCommandButton = document.getElementById('voice-command-btn');
 
 // Buttons
 const signinButton = document.getElementById('signin-button');
@@ -50,6 +68,11 @@ const saveCustomFieldButton = document.getElementById('save-custom-field-btn');
 const cancelCustomFieldButton = document.getElementById('cancel-custom-field-btn');
 const uploadProfilePicButton = document.getElementById('upload-profile-pic-btn');
 const uploadDocumentButton = document.getElementById('upload-document-btn');
+
+// NEW: Admin Login Button (In Sidebar)
+const adminLoginButton = document.getElementById('admin-login-btn'); 
+// NEW: Demo Mode Badge
+const demoBadge = document.getElementById('demo-mode-badge');
 
 // Face Scan Elements
 const scanFaceButton = document.getElementById('scan-face-btn');
@@ -74,6 +97,17 @@ const stopScannerButton = document.getElementById('stop-scanner-btn');
 const cameraPlaceholder = document.getElementById('camera-placeholder');
 const liveIndicator = document.getElementById('live-indicator');
 
+// Mood Monitor Elements
+const classMoodButton = document.getElementById('class-mood-btn');
+const backFromMoodButton = document.getElementById('back-from-mood');
+const startMoodButton = document.getElementById('start-mood-btn');
+const stopMoodButton = document.getElementById('stop-mood-btn');
+const moodVideo = document.getElementById('mood-video');
+const moodCanvas = document.getElementById('mood-canvas');
+const moodCameraPlaceholder = document.getElementById('mood-camera-placeholder');
+const moodEmojiDisplay = document.getElementById('mood-emoji-display');
+const moodTextDisplay = document.getElementById('mood-text-display');
+
 // Report Elements
 const attendanceClassSelector = document.getElementById('attendance-class-selector');
 const attendanceClassReport = document.getElementById('attendance-class-report');
@@ -82,7 +116,6 @@ const backToReportsButton = document.getElementById('back-to-reports-btn');
 const reportTableBody = document.getElementById('report-table-body');
 const reportDatePicker = document.getElementById('report-date-picker');
 const downloadReportButton = document.getElementById('download-report-btn');
-// Node List for new Class Cards
 const attendanceClassCards = document.querySelectorAll('.attendance-class-card');
 
 // Inputs & Display
@@ -95,7 +128,6 @@ const profilePicError = document.getElementById('profile-pic-error');
 const documentUpload = document.getElementById('document-upload');
 const studentDobInput = document.getElementById('student-dob');
 const studentAgeInput = document.getElementById('student-age');
-// NEW: Roll Number Input
 const studentRollNoInput = document.getElementById('student-roll-no');
 
 // Modals

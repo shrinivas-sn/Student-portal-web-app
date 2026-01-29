@@ -1,4 +1,4 @@
-// --- CLOUDINARY STORAGE LOGIC (STRICT EXAM PORTAL MODE) ---
+// --- CLOUDINARY STORAGE LOGIC (Dual-Mode Compatible) ---
 
 // 1. HELPER: Client-Side Image Compressor
 function compressImage(file, maxWidth, quality) {
@@ -47,8 +47,8 @@ function compressImage(file, maxWidth, quality) {
 
 // 2. CORE: Upload Function
 async function uploadFileToCloudinary(file) {
-    const CLOUD_NAME = "//Cloudinary API KEY Name";
-    const UPLOAD_PRESET = "//Cloudinary Upload Preset";
+    const CLOUD_NAME = "YOUR CLOUDINARY API KEY HERE";
+    const UPLOAD_PRESET = "YOUR UPLOAD PRESET NAME";
 
     let resourceType = 'raw';
     if (file.type.startsWith('image/')) {
@@ -98,18 +98,15 @@ async function handleProfilePicUpload(e) {
         const imageUrl = await uploadFileToCloudinary(compressedFile);
 
         if (imageUrl) {
-            // SUCCESS
             profilePicFilename.textContent = 'Uploaded Successfully';
             document.getElementById('student-profile-pic').src = imageUrl;
             e.target.value = ''; 
 
-            // FIX: Only update Firestore if the student ALREADY exists (Edit Mode)
             if (currentStudentId) {
-                await db.collection('students').doc(currentStudentId).update({ profilePicUrl: imageUrl });
+                // SWITCHER: Uses 'students' OR 'demo_students'
+                const collection = getCollectionName('students');
+                await db.collection(collection).doc(currentStudentId).update({ profilePicUrl: imageUrl });
             }
-            // If New Student: We just updated the <img> src above. 
-            // The 'saveStudent' function in db.js will read that src later.
-
         } else {
             profilePicFilename.textContent = 'Upload failed.';
             alert("Upload failed. Check internet connection.");
@@ -155,17 +152,15 @@ async function handleDocumentUpload(e) {
             const fileUrl = await uploadFileToCloudinary(fileToUpload);
             
             if (fileUrl) {
-                // Success: Prepare the document object
                 const newDocument = { id: docId, name: file.name, url: fileUrl, type: file.type };
                 
-                // FIX: Check mode
                 if (currentStudentId) {
-                    // EDIT MODE: Update DB immediately
-                    await db.collection('students').doc(currentStudentId).update({
+                    // SWITCHER: Uses 'students' OR 'demo_students'
+                    const collection = getCollectionName('students');
+                    await db.collection(collection).doc(currentStudentId).update({
                         documents: firebase.firestore.FieldValue.arrayUnion(newDocument)
                     });
                 } else {
-                    // NEW MODE: Add to pending array
                     pendingDocuments.push(newDocument);
                 }
 

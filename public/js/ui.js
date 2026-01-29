@@ -1,5 +1,89 @@
 // --- UI & VIEW NAVIGATION ---
 
+// Toast Notification
+function showToast(message, type = 'info') {
+    if (!toastContainer) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `
+        px-4 py-3 rounded-lg shadow-lg text-sm font-semibold text-white animate-fade-in-up transition-opacity duration-300
+        ${type === 'success' ? 'bg-green-600' : 'bg-blue-600'}
+    `;
+    toast.innerHTML = `
+        <div class="flex items-center gap-2">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('opacity-0'); 
+        setTimeout(() => toast.remove(), 300); 
+    }, 3000);
+}
+
+// NEW: Mood View Navigation
+function showMoodView(historyMode = 'push') {
+    currentView = 'mood';
+    
+    // Hide all other views
+    document.getElementById('dashboard-view').classList.add('hidden');
+    document.getElementById('attendance-view').classList.add('hidden');
+    document.getElementById('class-view').classList.add('hidden');
+    document.getElementById('students-list-view').classList.add('hidden');
+    document.getElementById('student-profile-view').classList.add('hidden');
+    
+    // Show Mood View
+    document.getElementById('mood-view').classList.remove('hidden');
+    
+    document.getElementById('page-title').textContent = 'Class Mood';
+    
+    // Reset State
+    stopAttendanceScanner();
+    stopMoodScanner();
+    
+    const state = { view: 'mood' };
+    const url = '#mood';
+    if (historyMode === 'push') history.pushState(state, '', url);
+    else if (historyMode === 'replace') history.replaceState(state, '', url);
+}
+
+// NEW: Update Mood Display
+function updateMoodDisplay(expression) {
+    if (!moodEmojiDisplay || !moodTextDisplay) return;
+
+    let emoji = '😶';
+    let text = 'Detecting...';
+    let colorClass = 'text-gray-800';
+
+    switch (expression) {
+        case 'happy':
+            emoji = '😄'; text = 'Happy & Positive!'; colorClass = 'text-green-600';
+            break;
+        case 'sad':
+            emoji = '🙁'; text = 'Sad / Low Energy'; colorClass = 'text-blue-600';
+            break;
+        case 'angry':
+            emoji = '😠'; text = 'Angry / Tense'; colorClass = 'text-red-600';
+            break;
+        case 'surprised':
+            emoji = '😮'; text = 'Surprised'; colorClass = 'text-purple-600';
+            break;
+        case 'neutral':
+            emoji = '😐'; text = 'Neutral / Calm'; colorClass = 'text-gray-600';
+            break;
+        default:
+            emoji = '😶'; text = 'Waiting...'; colorClass = 'text-gray-400';
+    }
+
+    moodEmojiDisplay.textContent = emoji;
+    moodTextDisplay.textContent = text;
+    moodTextDisplay.className = `text-3xl font-extrabold mb-2 ${colorClass}`;
+}
+
+
 function showDashboardView(historyMode = 'push') {
     currentView = 'dashboard';
     document.getElementById('dashboard-view').classList.remove('hidden');
@@ -7,11 +91,12 @@ function showDashboardView(historyMode = 'push') {
     document.getElementById('class-view').classList.add('hidden');
     document.getElementById('students-list-view').classList.add('hidden');
     document.getElementById('student-profile-view').classList.add('hidden');
+    document.getElementById('mood-view').classList.add('hidden'); // Hide mood
+
     document.getElementById('page-title').textContent = 'School Statistics';
     
     stopAttendanceScanner();
-
-    // Reset Dashboard State: Show Class Selector, Hide Table
+    stopMoodScanner();
     hideClassAttendanceReport();
     
     const state = { view: 'dashboard' };
@@ -20,23 +105,16 @@ function showDashboardView(historyMode = 'push') {
     else if (historyMode === 'replace') history.replaceState(state, '', url);
 }
 
-// NEW: Show Specific Class Report
 function showClassAttendanceReport(classId) {
     currentReportClass = classId;
-    
-    // Hide Selector, Show Table
     attendanceClassSelector.classList.add('hidden');
     attendanceClassReport.classList.remove('hidden');
-    
-    // Update Title
     reportClassTitle.textContent = `Class ${classId} Attendance`;
     
-    // Set Date to Today
     const today = new Date().toISOString().split('T')[0];
     if(reportDatePicker) reportDatePicker.value = today;
     
-    // Load Data
-    loadTodaysAttendance(); // This now uses currentReportClass to filter
+    loadTodaysAttendance(); 
 }
 
 function hideClassAttendanceReport() {
@@ -52,6 +130,7 @@ function showAttendanceView(historyMode = 'push') {
     document.getElementById('class-view').classList.add('hidden');
     document.getElementById('students-list-view').classList.add('hidden');
     document.getElementById('student-profile-view').classList.add('hidden');
+    document.getElementById('mood-view').classList.add('hidden'); // Hide mood
     document.getElementById('page-title').textContent = 'Scanner';
     
     document.getElementById('attendance-log').innerHTML = '<p class="text-sm text-gray-400 text-center italic mt-10">Waiting for scans...</p>';
@@ -78,8 +157,10 @@ function showClassView(classId, historyMode = 'push') {
     document.getElementById('class-view').classList.remove('hidden');
     document.getElementById('students-list-view').classList.add('hidden');
     document.getElementById('student-profile-view').classList.add('hidden');
+    document.getElementById('mood-view').classList.add('hidden'); // Hide mood
     
     stopAttendanceScanner();
+    stopMoodScanner();
 
     let title = classId === 'graduated' ? 'Graduated Students' : `${classId}th Class`;
     document.getElementById('page-title').textContent = title;
@@ -111,8 +192,10 @@ function showStudentsListView(classId, gender, historyMode = 'push') {
     document.getElementById('class-view').classList.add('hidden');
     document.getElementById('students-list-view').classList.remove('hidden');
     document.getElementById('student-profile-view').classList.add('hidden');
+    document.getElementById('mood-view').classList.add('hidden'); // Hide mood
     
     stopAttendanceScanner();
+    stopMoodScanner();
 
     let title = classId === 'graduated' ? 'Graduated Students' : `${classId}th Class - ${gender === 'male' ? 'Boys' : 'Girls'}`;
     document.getElementById('page-title').textContent = title;
@@ -133,8 +216,10 @@ function showStudentProfileView(studentId, historyMode = 'push') {
     document.getElementById('class-view').classList.add('hidden');
     document.getElementById('students-list-view').classList.add('hidden');
     document.getElementById('student-profile-view').classList.remove('hidden');
+    document.getElementById('mood-view').classList.add('hidden'); // Hide mood
     
     stopAttendanceScanner();
+    stopMoodScanner();
 
     if (studentId === null) {
         clearStudentProfileForm();
@@ -150,12 +235,11 @@ function showStudentProfileView(studentId, historyMode = 'push') {
     }
 }
 
-// --- DOM POPULATION HELPERS ---
+// --- DOM POPULATION HELPERS (Unchanged) ---
+// (Keep existing helper functions here: renderDailyReport, clearStudentProfileForm, loadStudentsList, etc.)
 
 function renderDailyReport(attendanceRecords, classFilter) {
     reportTableBody.innerHTML = '';
-    
-    // 1. Filter Students by the selected class
     const studentsInClass = allStudents.filter(s => s.standard === classFilter);
     
     if (studentsInClass.length === 0) {
@@ -163,25 +247,22 @@ function renderDailyReport(attendanceRecords, classFilter) {
         return;
     }
 
-    // 2. Map Data
     const reportData = studentsInClass.map(student => {
         const record = attendanceRecords.find(r => r.studentId === student.id);
         return {
             name: student.name,
-            rollNo: student.rollNumber || 'N/A', // USE MANUAL ROLL NO
+            rollNo: student.rollNumber || 'N/A',
             status: record ? 'Present' : 'Absent',
             time: record ? new Date(record.timestamp?.toDate ? record.timestamp.toDate() : record.createdAt || Date.now()).toLocaleTimeString() : '-'
         };
     });
 
-    // 3. Sort by Roll Number (Numeric sort if possible)
     reportData.sort((a, b) => {
         const rA = parseInt(a.rollNo) || 99999;
         const rB = parseInt(b.rollNo) || 99999;
         return rA - rB;
     });
 
-    // 4. Draw Rows
     reportData.forEach(row => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -213,10 +294,7 @@ function clearStudentProfileForm() {
     document.getElementById('student-profile-pic').src = 'https://placehold.co/200x200/cccccc/ffffff?text=Photo';
     profilePicFilename.textContent = 'No file selected';
     document.getElementById('student-full-name').value = '';
-    
-    // NEW: Clear Roll No
     studentRollNoInput.value = '';
-
     document.getElementById('student-dob').value = '';
     document.getElementById('student-age').value = '';
     document.getElementById('student-standard').value = currentClass || '8';
@@ -292,10 +370,7 @@ function loadStudentProfile(studentId) {
     document.getElementById('student-profile-pic').src = student.profilePicUrl || 'https://placehold.co/200x200/cccccc/ffffff?text=Photo';
     profilePicFilename.textContent = 'No file selected';
     document.getElementById('student-full-name').value = student.name || '';
-    
-    // NEW: Load Roll Number
     studentRollNoInput.value = student.rollNumber || '';
-
     document.getElementById('student-dob').value = student.dob || '';
     document.getElementById('student-standard').value = student.standard || '8';
     document.getElementById('student-gender').value = student.gender || 'male';

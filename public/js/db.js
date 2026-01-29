@@ -1,13 +1,17 @@
-// --- FIRESTORE DATA HANDLING ---
+// --- FIRESTORE DATA HANDLING (Dual-Mode Enabled) ---
 
 function loadAllStudentsFromFirestore() {
     loadingScreen.classList.remove('hidden');
-    db.collection('students').onSnapshot(snapshot => {
+    
+    // SWITCHER: Uses 'students' OR 'demo_students'
+    const collection = getCollectionName('students'); 
+    console.log(`Loading data from: ${collection}`);
+
+    db.collection(collection).onSnapshot(snapshot => {
         allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         updateStudentCounts(); 
         loadingScreen.classList.add('hidden');
         
-        // If we are looking at a specific class report on dashboard, update it in real-time
         if (currentView === 'dashboard' && currentReportClass) {
             loadTodaysAttendance();
         }
@@ -17,23 +21,23 @@ function loadAllStudentsFromFirestore() {
         }
     }, error => {
         console.error("Error fetching students: ", error);
-        alert("Could not load student data.");
+        alert("Could not load data. Check internet connection.");
         loadingScreen.classList.add('hidden');
     });
 }
 
 // Load Attendance with Class Filter Logic
 async function loadTodaysAttendance() {
-    // Only load if we have a class selected
     if (!currentReportClass) return;
 
     const dateInput = document.getElementById('report-date-picker');
     const date = dateInput && dateInput.value ? dateInput.value : new Date().toISOString().split('T')[0];
 
     try {
-        const snapshot = await db.collection('attendance').where('date', '==', date).get();
+        // SWITCHER: Uses 'attendance' OR 'demo_attendance'
+        const collection = getCollectionName('attendance');
+        const snapshot = await db.collection(collection).where('date', '==', date).get();
         const records = snapshot.docs.map(doc => doc.data());
-        // Call Render with the specific class filter
         renderDailyReport(records, currentReportClass); 
     } catch (error) {
         console.error("Error loading attendance report:", error);
@@ -46,7 +50,6 @@ async function saveAttendanceRecord(student) {
     if (todaysAttendance.includes(student.id)) return;
     todaysAttendance.push(student.id);
     
-    // UI Log
     const logItem = document.createElement('div');
     logItem.className = 'flex items-center justify-between p-2 bg-green-50 rounded border border-green-100 animate-fade-in';
     logItem.innerHTML = `
@@ -64,13 +67,16 @@ async function saveAttendanceRecord(student) {
     todayScanCount.textContent = todaysAttendance.length;
 
     try {
-        const check = await db.collection('attendance')
+        // SWITCHER: Uses 'attendance' OR 'demo_attendance'
+        const collection = getCollectionName('attendance');
+        
+        const check = await db.collection(collection)
                               .where('studentId', '==', student.id)
                               .where('date', '==', today)
                               .get();
         
         if (check.empty) {
-            await db.collection('attendance').add({
+            await db.collection(collection).add({
                 studentId: student.id,
                 name: student.name,
                 class: student.standard,
@@ -98,9 +104,7 @@ async function saveStudent() {
     
     const studentData = {
         name: document.getElementById('student-full-name').value || 'Unnamed Student',
-        // NEW: Save Roll Number
         rollNumber: document.getElementById('student-roll-no').value.trim(),
-        
         dob: document.getElementById('student-dob').value,
         standard: document.getElementById('student-standard').value,
         gender: document.getElementById('student-gender').value,
@@ -121,6 +125,9 @@ async function saveStudent() {
     });
 
     try {
+        // SWITCHER: Uses 'students' OR 'demo_students'
+        const collection = getCollectionName('students');
+
         if (currentStudentId) {
             const originalStudent = allStudents.find(s => s.id === currentStudentId);
             if (originalStudent) {
@@ -133,7 +140,7 @@ async function saveStudent() {
                 studentData.faceDescriptor = currentFaceDescriptor;
             }
             
-            await db.collection('students').doc(currentStudentId).set(studentData, { merge: true });
+            await db.collection(collection).doc(currentStudentId).set(studentData, { merge: true });
             alert('Student updated successfully!');
         } else {
             studentData.documents = pendingDocuments;
@@ -141,7 +148,7 @@ async function saveStudent() {
                 studentData.faceDescriptor = currentFaceDescriptor;
             }
             
-            const docRef = await db.collection('students').add(studentData);
+            const docRef = await db.collection(collection).add(studentData);
             currentStudentId = docRef.id; 
             alert('New student created successfully!');
         }
@@ -162,7 +169,9 @@ async function saveStudent() {
 async function deleteStudent() {
     if (!currentStudentId) return;
     try {
-        await db.collection('students').doc(currentStudentId).delete();
+        // SWITCHER: Uses 'students' OR 'demo_students'
+        const collection = getCollectionName('students');
+        await db.collection(collection).doc(currentStudentId).delete();
         deleteModal.classList.add('hidden');
         showClassView(currentClass);
     } catch (error) {
@@ -175,9 +184,13 @@ async function promoteStudents() {
     confirmPromoteButton.disabled = true;
     confirmPromoteButton.textContent = 'Promoting...';
     const batch = db.batch();
+    
+    // SWITCHER: Uses 'students' OR 'demo_students'
+    const collection = getCollectionName('students');
+    
     const studentsToPromote = allStudents.filter(s => ['8', '9', '10'].includes(s.standard));
     studentsToPromote.forEach(student => {
-        const docRef = db.collection('students').doc(student.id);
+        const docRef = db.collection(collection).doc(student.id);
         let newStandard = student.standard;
         if (student.standard === '10') newStandard = 'graduated';
         else if (student.standard === '9') newStandard = '10';

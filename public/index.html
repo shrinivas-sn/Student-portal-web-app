@@ -14,67 +14,104 @@
         <p class="mt-4 text-gray-600" id="loading-text">Loading Portal...</p>
     </div>
 
+    <div id="toast-container" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-[60] flex flex-col gap-2 w-max max-w-xs pointer-events-none"></div>
+
     <div id="signin-screen" class="fixed inset-0 bg-white z-50 flex-col items-center justify-center hidden">
-        <div class="text-center p-8 max-w-md">
-            <img src="https://placehold.co/150x150/3498db/ffffff?text=GHS" alt="School Logo" class="mx-auto mb-6 rounded-full">
+        <div class="text-center p-8 max-w-md w-full">
+            
+            <img src="school-logo.jpg" alt="GHS Kotabagi School Board" class="mx-auto mb-6 rounded-lg shadow-md w-full max-w-sm h-auto object-cover">
+            
             <h1 class="text-3xl font-bold text-gray-800 mb-2">GHS Kotabagi</h1>
             <h2 class="text-xl text-gray-600 mb-8">Student Portal</h2>
-            <p class="text-gray-600 mb-6">Please sign in with your authorized Google account to access the student management system.</p>
-            <button id="signin-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center mx-auto">
+            <p class="text-gray-600 mb-6">Staff Access Only. Guests please use Demo Mode.</p>
+            
+            <button id="signin-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center mx-auto transition-transform active:scale-95">
                 <i class="fab fa-google mr-3"></i> Sign in with Google
             </button>
-            <p id="signin-error" class="text-red-500 mt-4 hidden">Access denied. Please use the authorized school account.</p>
+            
+            <p id="signin-error" class="text-red-500 mt-4 hidden">Access denied.</p>
+            
+            <button id="back-to-demo-btn" class="mt-4 text-gray-500 hover:text-gray-800 underline text-sm">Back to Demo Mode</button>
         </div>
     </div>
 
     <div id="app" class="hidden md:flex">
         <div class="sidebar bg-white w-64 shadow-lg md:relative fixed top-0 left-0 flex-shrink-0">
             <div class="p-4 border-b border-gray-200">
-                <div class="flex items-center">
-                    <img src="https://placehold.co/50x50/3498db/ffffff?text=GHS" alt="School Logo" class="rounded-full mr-3">
+                
+                <div class="flex flex-col items-center text-center">
+                    
+                    <img src="school-logo.jpg" alt="School Logo" class="w-full h-auto rounded-lg mb-3 shadow-sm object-cover">
+                    
                     <div>
-                        <h1 class="font-bold text-gray-800">GHS Kotabagi</h1>
-                        <p class="text-xs text-gray-500">Student Portal</p>
+                        <h1 class="font-bold text-gray-800 text-lg leading-tight">GHS Kotabagi</h1>
+                        <p class="text-xs text-gray-500 font-medium">Student Portal</p>
                     </div>
                 </div>
+
             </div>
             <div class="p-4">
                 <div class="flex items-center mb-6">
-                    <img id="user-avatar" src="https://placehold.co/40x40" alt="User" class="rounded-full mr-3">
+                    <img id="user-avatar" src="https://placehold.co/40x40" alt="User" class="rounded-full mr-3 border border-gray-200">
                     <div class="min-w-0">
-                        <p id="user-name" class="font-medium text-gray-800">Admin User</p>
-                        <p id="user-email" class="text-xs text-gray-500 truncate">principal@ghskotabagi.edu</p>
+                        <p id="user-name" class="font-medium text-gray-800">Guest Recruiter</p>
+                        <p id="user-email" class="text-xs text-gray-500 truncate">Demo Access</p>
                     </div>
                 </div>
                 <nav>
                     <h3 class="text-xs uppercase font-bold text-gray-500 mb-2">Classes (Menu)</h3>
                     <ul class="space-y-1">
-                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50" data-class="8"><i class="fas fa-users mr-3"></i> 8th Class</a></li>
-                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50" data-class="9"><i class="fas fa-users mr-3"></i> 9th Class</a></li>
-                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50" data-class="10"><i class="fas fa-users mr-3"></i> 10th Class</a></li>
-                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50" data-class="graduated"><i class="fas fa-graduation-cap mr-3"></i> Graduated</a></li>
+                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50 transition-colors" data-class="8"><i class="fas fa-users mr-3 text-blue-500"></i> 8th Class</a></li>
+                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50 transition-colors" data-class="9"><i class="fas fa-users mr-3 text-blue-500"></i> 9th Class</a></li>
+                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50 transition-colors" data-class="10"><i class="fas fa-users mr-3 text-blue-500"></i> 10th Class</a></li>
+                        <li><a href="#" class="class-link flex items-center p-2 rounded-lg hover:bg-blue-50 transition-colors" data-class="graduated"><i class="fas fa-graduation-cap mr-3 text-gray-400"></i> Graduated</a></li>
                     </ul>
                     
                     <h3 class="text-xs uppercase font-bold text-gray-500 mt-6 mb-2">Admin</h3>
                     <ul>
+                        <li>
+                            <a href="#" id="admin-login-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 text-blue-700 transition-colors">
+                                <i class="fas fa-id-badge mr-3"></i> Staff Access
+                            </a>
+                        </li>
+                        
                          <li>
-                            <a href="#" id="mark-attendance-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 text-gray-800">
+                            <a href="#" id="mark-attendance-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 text-gray-800 transition-colors">
                                 <i class="fas fa-camera mr-3"></i> Mark Attendance
                             </a>
                         </li>
-                        <li><a href="#" id="promote-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50"><i class="fas fa-arrow-up mr-3"></i> Promote Students</a></li>
-                        <li><a href="#" id="signout-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50"><i class="fas fa-sign-out-alt mr-3"></i> Sign Out</a></li>
+                        <li>
+                            <a href="#" id="class-mood-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 text-gray-800 transition-colors">
+                                <i class="fas fa-smile mr-3 text-yellow-500"></i> Class Mood
+                            </a>
+                        </li>
+                        <li><a href="#" id="promote-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 transition-colors"><i class="fas fa-arrow-up mr-3"></i> Promote Students</a></li>
+                        <li>
+                            <a href="#" id="app-tour-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 text-gray-800 transition-colors">
+                                <i class="fas fa-book-open mr-3"></i> User Guide
+                            </a>
+                        </li>
+                        <li><a href="#" id="signout-btn" class="flex items-center p-2 rounded-lg hover:bg-blue-50 hidden transition-colors"><i class="fas fa-sign-out-alt mr-3"></i> Sign Out</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
 
         <div id="main-content" class="flex-1 min-h-screen">
-            <header class="bg-white shadow-sm p-4 flex items-center">
-                <button id="mobile-menu-button" class="mr-4 p-2 rounded-md hover:bg-gray-200">
-                    <i class="fas fa-bars text-gray-700 text-xl"></i>
+            <header class="bg-white shadow-sm p-4 flex items-center justify-between sticky top-0 z-30">
+                <div class="flex items-center">
+                    <button id="mobile-menu-button" class="mr-4 p-2 rounded-md hover:bg-gray-200 md:hidden text-gray-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex items-center gap-3">
+                         <h1 id="page-title" class="text-2xl font-bold text-gray-800">School Statistics</h1>
+                         <span id="demo-mode-badge" class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded-full border border-orange-200">DEMO MODE</span>
+                    </div>
+                </div>
+                
+                <button id="voice-command-btn" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 p-3 rounded-full shadow-sm flex items-center justify-center transition-all duration-300 w-12 h-12" title="Voice Commands">
+                    <i class="fas fa-microphone text-xl"></i>
                 </button>
-                <h1 id="page-title" class="text-2xl font-bold text-gray-800">School Statistics</h1>
             </header>
 
             <main class="p-4">
@@ -83,76 +120,28 @@
                         <h2 class="text-xl font-bold text-gray-700 mb-4">Live Student Statistics</h2>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                             <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-transform duration-300">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <p class="text-blue-100 text-sm font-semibold uppercase tracking-wider">Total Active Students</p>
-                                        <h3 class="text-4xl font-bold mt-1" id="total-active-count">0</h3>
-                                    </div>
-                                    <div class="bg-white bg-opacity-20 p-3 rounded-full"><i class="fas fa-users text-3xl"></i></div>
-                                </div>
-                                <p class="text-sm text-blue-100 mt-4 border-t border-blue-400 pt-2">Across 8th, 9th & 10th</p>
+                                <div class="flex justify-between items-center"><div><p class="text-blue-100 text-sm font-semibold uppercase tracking-wider">Total Active Students</p><h3 class="text-4xl font-bold mt-1" id="total-active-count">0</h3></div><div class="bg-white bg-opacity-20 p-3 rounded-full"><i class="fas fa-users text-3xl"></i></div></div><p class="text-sm text-blue-100 mt-4 border-t border-blue-400 pt-2">Across 8th, 9th & 10th</p>
                             </div>
-                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="bg-blue-100 p-3 rounded-full"><i class="fas fa-male text-blue-600 text-xl"></i></div>
-                                    <span class="text-xs font-bold text-gray-400 uppercase">Boys</span>
-                                </div>
-                                <h3 class="text-3xl font-bold text-gray-800" id="total-boys-count">0</h3>
+                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center justify-between mb-4"><div class="bg-blue-100 p-3 rounded-full"><i class="fas fa-male text-blue-600 text-xl"></i></div><span class="text-xs font-bold text-gray-400 uppercase">Boys</span></div><h3 class="text-3xl font-bold text-gray-800" id="total-boys-count">0</h3>
                             </div>
-                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-pink-500">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="bg-pink-100 p-3 rounded-full"><i class="fas fa-female text-pink-600 text-xl"></i></div>
-                                    <span class="text-xs font-bold text-gray-400 uppercase">Girls</span>
-                                </div>
-                                <h3 class="text-3xl font-bold text-gray-800" id="total-girls-count">0</h3>
+                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-pink-500 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center justify-between mb-4"><div class="bg-pink-100 p-3 rounded-full"><i class="fas fa-female text-pink-600 text-xl"></i></div><span class="text-xs font-bold text-gray-400 uppercase">Girls</span></div><h3 class="text-3xl font-bold text-gray-800" id="total-girls-count">0</h3>
                             </div>
                         </div>
                     </div>
-
+                    
                     <div id="attendance-class-selector" class="mb-6">
                         <h2 class="text-xl font-bold text-gray-700 mb-4">Daily Attendance Reports</h2>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg cursor-pointer transition-shadow attendance-class-card" data-report-class="8">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <div class="bg-purple-100 p-4 rounded-full mr-4">
-                                            <i class="fas fa-clipboard-list text-purple-600 text-2xl"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">8th Class</h3>
-                                            <p class="text-sm text-gray-500">View Report</p>
-                                        </div>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-300"></i>
-                                </div>
+                            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg cursor-pointer transition-shadow attendance-class-card group" data-report-class="8">
+                                <div class="flex items-center justify-between"><div class="flex items-center"><div class="bg-purple-100 p-4 rounded-full mr-4 group-hover:bg-purple-200 transition-colors"><i class="fas fa-clipboard-list text-purple-600 text-2xl"></i></div><div><h3 class="font-bold text-lg text-gray-800">8th Class</h3><p class="text-sm text-gray-500">View Report</p></div></div><i class="fas fa-chevron-right text-gray-300 group-hover:text-purple-500 transition-colors"></i></div>
                             </div>
-                            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg cursor-pointer transition-shadow attendance-class-card" data-report-class="9">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <div class="bg-indigo-100 p-4 rounded-full mr-4">
-                                            <i class="fas fa-clipboard-list text-indigo-600 text-2xl"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">9th Class</h3>
-                                            <p class="text-sm text-gray-500">View Report</p>
-                                        </div>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-300"></i>
-                                </div>
+                            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg cursor-pointer transition-shadow attendance-class-card group" data-report-class="9">
+                                <div class="flex items-center justify-between"><div class="flex items-center"><div class="bg-indigo-100 p-4 rounded-full mr-4 group-hover:bg-indigo-200 transition-colors"><i class="fas fa-clipboard-list text-indigo-600 text-2xl"></i></div><div><h3 class="font-bold text-lg text-gray-800">9th Class</h3><p class="text-sm text-gray-500">View Report</p></div></div><i class="fas fa-chevron-right text-gray-300 group-hover:text-indigo-500 transition-colors"></i></div>
                             </div>
-                            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg cursor-pointer transition-shadow attendance-class-card" data-report-class="10">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <div class="bg-teal-100 p-4 rounded-full mr-4">
-                                            <i class="fas fa-clipboard-list text-teal-600 text-2xl"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">10th Class</h3>
-                                            <p class="text-sm text-gray-500">View Report</p>
-                                        </div>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-300"></i>
-                                </div>
+                            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg cursor-pointer transition-shadow attendance-class-card group" data-report-class="10">
+                                <div class="flex items-center justify-between"><div class="flex items-center"><div class="bg-teal-100 p-4 rounded-full mr-4 group-hover:bg-teal-200 transition-colors"><i class="fas fa-clipboard-list text-teal-600 text-2xl"></i></div><div><h3 class="font-bold text-lg text-gray-800">10th Class</h3><p class="text-sm text-gray-500">View Report</p></div></div><i class="fas fa-chevron-right text-gray-300 group-hover:text-teal-500 transition-colors"></i></div>
                             </div>
                         </div>
                     </div>
@@ -160,181 +149,96 @@
                     <div id="attendance-class-report" class="bg-white rounded-xl shadow-lg p-6 mb-6 hidden">
                         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
                             <div class="flex items-center gap-4">
-                                <button id="back-to-reports-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg flex items-center">
-                                    <i class="fas fa-arrow-left mr-2"></i> Back
-                                </button>
-                                <div>
-                                    <h2 id="report-class-title" class="text-xl font-bold text-gray-800">Class Attendance</h2>
-                                    <p class="text-sm text-gray-500">Daily record.</p>
-                                </div>
+                                <button id="back-to-reports-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-arrow-left mr-2"></i> Back</button>
+                                <div><h2 id="report-class-title" class="text-xl font-bold text-gray-800">Class Attendance</h2><p class="text-sm text-gray-500">Daily record.</p></div>
                             </div>
-                            <div class="flex gap-3 mt-4 md:mt-0">
-                                <input type="date" id="report-date-picker" class="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <button id="download-report-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                                    <i class="fas fa-file-pdf mr-2"></i> Download PDF
-                                </button>
-                            </div>
+                            <div class="flex gap-3 mt-4 md:mt-0"><input type="date" id="report-date-picker" class="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"><button id="download-report-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg flex items-center shadow-md active:scale-95 transition-transform"><i class="fas fa-file-pdf mr-2"></i> Download PDF</button></div>
                         </div>
-                        
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll No</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="report-table-body" class="bg-white divide-y divide-gray-200">
-                                    </tbody>
-                            </table>
+                            <table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll No</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th></tr></thead><tbody id="report-table-body" class="bg-white divide-y divide-gray-200"></tbody></table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mood-view" class="hidden">
+                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                        <div class="flex items-center gap-4"><button id="back-from-mood" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-arrow-left mr-2"></i> Dashboard</button><h2 class="text-xl font-bold text-gray-800">Class Mood Monitor</h2></div>
+                        <div class="flex gap-3"><button id="start-mood-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg shadow-md flex items-center transition-transform active:scale-95"><i class="fas fa-play mr-2"></i> Start Monitor</button><button id="stop-mood-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-md flex items-center hidden transition-transform active:scale-95"><i class="fas fa-stop mr-2"></i> Stop</button></div>
+                    </div>
+                    <div class="flex flex-col lg:flex-row gap-6">
+                        <div class="lg:w-2/3 bg-black rounded-xl overflow-hidden relative shadow-lg h-[500px] flex items-center justify-center">
+                            <video id="mood-video" autoplay muted playsinline class="w-full h-full object-cover hidden"></video>
+                            <canvas id="mood-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                            <div id="mood-camera-placeholder" class="text-center text-gray-500"><i class="fas fa-smile text-6xl mb-4 opacity-50 text-yellow-500"></i><p class="text-lg">Mood Monitor is OFF</p><p class="text-sm">Click "Start Monitor" to detect class vibes.</p></div>
+                        </div>
+                        <div class="lg:w-1/3 bg-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center h-[500px] text-center">
+                            <h3 class="text-xl font-bold text-gray-500 mb-6 uppercase tracking-widest">Current Class Vibe</h3><div id="mood-emoji-display" class="text-9xl mb-6 transform transition-transform duration-500 hover:scale-110">😶</div><h2 id="mood-text-display" class="text-3xl font-extrabold text-gray-800 mb-2">Waiting...</h2><p class="text-gray-400 text-sm">AI is analyzing faces for expressions.</p>
+                            <div class="mt-8 grid grid-cols-2 gap-4 w-full max-w-xs"><div class="bg-green-50 p-2 rounded text-center"><span class="block text-xl">🙂</span><span class="text-xs font-bold text-green-700">Happy</span></div><div class="bg-blue-50 p-2 rounded text-center"><span class="block text-xl">😐</span><span class="text-xs font-bold text-blue-700">Neutral</span></div></div>
                         </div>
                     </div>
                 </div>
 
                 <div id="attendance-view" class="hidden">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                        <div class="flex items-center gap-4">
-                            <button id="back-from-attendance" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Dashboard
-                            </button>
-                            <h2 class="text-xl font-bold text-gray-800">Smart Attendance Scanner</h2>
-                        </div>
-                        <div class="flex gap-3">
-                            <button id="start-scanner-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md flex items-center">
-                                <i class="fas fa-play mr-2"></i> Start Scanning
-                            </button>
-                            <button id="stop-scanner-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-md flex items-center hidden">
-                                <i class="fas fa-stop mr-2"></i> Stop
-                            </button>
-                        </div>
+                        <div class="flex items-center gap-4"><button id="back-from-attendance" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-arrow-left mr-2"></i> Dashboard</button><h2 class="text-xl font-bold text-gray-800">Smart Attendance Scanner</h2></div>
+                        <div class="flex gap-3"><button id="start-scanner-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md flex items-center transition-transform active:scale-95"><i class="fas fa-play mr-2"></i> Start Scanning</button><button id="stop-scanner-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-md flex items-center hidden transition-transform active:scale-95"><i class="fas fa-stop mr-2"></i> Stop</button></div>
                     </div>
                     <div class="flex flex-col lg:flex-row gap-6">
                         <div class="lg:w-2/3 bg-black rounded-xl overflow-hidden relative shadow-lg h-[500px] flex items-center justify-center">
                             <video id="attendance-video" autoplay muted playsinline class="w-full h-full object-cover hidden"></video>
                             <canvas id="attendance-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
-                            <div id="camera-placeholder" class="text-center text-gray-500">
-                                <i class="fas fa-camera text-6xl mb-4 opacity-50"></i>
-                                <p class="text-lg">Camera is OFF</p>
-                                <p class="text-sm">Click "Start Scanning" to begin.</p>
-                            </div>
-                            <div id="live-indicator" class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs hidden shadow-md">
-                                <i class="fas fa-circle text-white animate-pulse mr-2"></i> Live Feed
-                            </div>
+                            <div id="camera-placeholder" class="text-center text-gray-500"><i class="fas fa-camera text-6xl mb-4 opacity-50"></i><p class="text-lg">Camera is OFF</p><p class="text-sm">Click "Start Scanning" to begin.</p></div>
+                            <div id="live-indicator" class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs hidden shadow-md"><i class="fas fa-circle text-white animate-pulse mr-2"></i> Live Feed</div>
                         </div>
-                        <div class="lg:w-1/3 bg-white rounded-xl shadow-lg p-4 flex flex-col h-[500px]">
-                            <h3 class="font-bold text-gray-700 mb-3 border-b pb-2">Today's Log</h3>
-                            <div id="attendance-log" class="flex-1 overflow-y-auto space-y-2">
-                                <p class="text-sm text-gray-400 text-center italic mt-10">Waiting for scans...</p>
-                            </div>
-                            <div class="mt-3 pt-3 border-t text-center">
-                                <p class="text-xs text-gray-500">Faces recognized today: <span id="today-scan-count" class="font-bold text-blue-600">0</span></p>
-                            </div>
-                        </div>
+                        <div class="lg:w-1/3 bg-white rounded-xl shadow-lg p-4 flex flex-col h-[500px]"><h3 class="font-bold text-gray-700 mb-3 border-b pb-2">Today's Log</h3><div id="attendance-log" class="flex-1 overflow-y-auto space-y-2"><p class="text-sm text-gray-400 text-center italic mt-10">Waiting for scans...</p></div><div class="mt-3 pt-3 border-t text-center"><p class="text-xs text-gray-500">Faces recognized today: <span id="today-scan-count" class="font-bold text-blue-600">0</span></p></div></div>
                     </div>
                 </div>
 
                 <div id="class-view" class="hidden">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                        <div class="flex items-center gap-4">
-                            <button id="back-to-dashboard" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Dashboard
-                            </button>
-                            <h2 id="class-view-title" class="text-xl font-bold text-gray-800"></h2>
-                        </div>
+                        <div class="flex items-center gap-4"><button id="back-to-dashboard" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-arrow-left mr-2"></i> Dashboard</button><h2 id="class-view-title" class="text-xl font-bold text-gray-800"></h2></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow cursor-pointer gender-card" data-gender="male">
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-3 rounded-full mr-4"><i class="fas fa-male text-blue-600 text-xl"></i></div>
-                                <div><h3 class="font-bold text-gray-800">Boys</h3><p class="text-gray-500 text-sm"><span id="male-count">0</span> students</p></div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow cursor-pointer gender-card" data-gender="female">
-                            <div class="flex items-center">
-                                <div class="bg-pink-100 p-3 rounded-full mr-4"><i class="fas fa-female text-pink-600 text-xl"></i></div>
-                                <div><h3 class="font-bold text-gray-800">Girls</h3><p class="text-gray-500 text-sm"><span id="female-count">0</span> students</p></div>
-                            </div>
-                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow cursor-pointer gender-card" data-gender="male"><div class="flex items-center"><div class="bg-blue-100 p-3 rounded-full mr-4"><i class="fas fa-male text-blue-600 text-xl"></i></div><div><h3 class="font-bold text-gray-800">Boys</h3><p class="text-gray-500 text-sm"><span id="male-count">0</span> students</p></div></div></div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow cursor-pointer gender-card" data-gender="female"><div class="flex items-center"><div class="bg-pink-100 p-3 rounded-full mr-4"><i class="fas fa-female text-pink-600 text-xl"></i></div><div><h3 class="font-bold text-gray-800">Girls</h3><p class="text-gray-500 text-sm"><span id="female-count">0</span> students</p></div></div></div>
                     </div>
                 </div>
 
                 <div id="students-list-view" class="hidden">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                        <div class="flex items-center gap-4">
-                            <button id="back-to-class" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Back
-                            </button>
-                            <h2 id="students-list-title" class="text-xl font-bold text-gray-800"></h2>
-                        </div>
-                        <button id="add-student-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center w-max">
-                            <i class="fas fa-plus mr-2"></i> Add Student
-                        </button>
+                        <div class="flex items-center gap-4"><button id="back-to-class" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-arrow-left mr-2"></i> Back</button><h2 id="students-list-title" class="text-xl font-bold text-gray-800"></h2></div><button id="add-student-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center w-max shadow-md transition-transform active:scale-95"><i class="fas fa-plus mr-2"></i> Add Student</button>
                     </div>
                     <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4 border-b border-gray-200">
-                            <div class="relative">
-                                <input type="text" id="student-search" placeholder="Search students..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                            </div>
-                        </div>
-                        <div id="students-list-container" class="divide-y divide-gray-200"></div>
+                         <div class="p-4 border-b border-gray-200"><div class="relative"><input type="text" id="student-search" placeholder="Search students..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"><i class="fas fa-search absolute left-3 top-3 text-gray-400"></i></div></div>
+                         <div id="students-list-container" class="divide-y divide-gray-200"></div>
                     </div>
                 </div>
 
                 <div id="student-profile-view" class="hidden">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                        <div class="flex items-center gap-4">
-                             <button id="back-to-students-list" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Back to List
-                            </button>
-                            <h2 id="student-profile-title" class="text-xl font-bold text-gray-800">Student Profile</h2>
-                        </div>
-                        <button id="save-student-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center w-max">
-                            <i class="fas fa-save mr-2"></i> Save Changes
-                        </button>
+                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                        <div class="flex items-center gap-4"><button id="back-to-students-list" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-arrow-left mr-2"></i> Back to List</button><h2 id="student-profile-title" class="text-xl font-bold text-gray-800">Student Profile</h2></div><button id="save-student-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center w-max shadow-md transition-transform active:scale-95"><i class="fas fa-save mr-2"></i> Save Changes</button>
                     </div>
-                    
                     <div class="bg-white rounded-lg shadow overflow-hidden">
                         <div class="p-6">
                             <div class="flex flex-col md:flex-row gap-8">
                                 <div class="md:w-1/3">
                                     <div class="mb-6">
-                                        <div class="flex justify-center mb-4">
-                                            <img id="student-profile-pic" src="https://placehold.co/200x200/cccccc/ffffff?text=Photo" alt="Profile" class="profile-pic rounded-full border-4 border-white shadow-lg">
-                                        </div>
-                                        <div class="text-center">
-                                            <h3 id="student-name-display" class="text-xl font-bold text-gray-800 mb-1">Student Name</h3>
-                                            <p id="student-class-display" class="text-gray-600 mb-4">8th Class</p>
-                                        </div>
+                                        <div class="flex justify-center mb-4"><img id="student-profile-pic" src="https://placehold.co/200x200/cccccc/ffffff?text=Photo" alt="Profile" class="profile-pic rounded-full border-4 border-white shadow-lg"></div>
+                                        <div class="text-center"><h3 id="student-name-display" class="text-xl font-bold text-gray-800 mb-1">Student Name</h3><p id="student-class-display" class="text-gray-600 mb-4">8th Class</p></div>
                                         <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 text-center">
                                             <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Biometric Attendance</label>
                                             <div id="face-status" class="text-sm mb-2 text-red-500 font-semibold"><i class="fas fa-times-circle"></i> Not Registered</div>
-                                            <button id="scan-face-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2 px-4 rounded-full w-full">
-                                                <i class="fas fa-camera mr-2"></i> Scan Face
-                                            </button>
+                                            <button id="scan-face-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2 px-4 rounded-full w-full transition-transform active:scale-95"><i class="fas fa-camera mr-2"></i> Scan Face</button>
                                         </div>
                                     </div>
                                     <div class="mb-6">
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
-                                        <div class="flex items-center">
-                                            <input type="file" id="profile-pic-upload" accept="image/*" class="hidden">
-                                            <button id="upload-profile-pic-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                                                <i class="fas fa-upload mr-2"></i> Upload
-                                            </button>
-                                            <span id="profile-pic-filename" class="ml-3 text-sm text-gray-500 truncate max-w-xs">No file selected</span>
-                                        </div>
+                                        <div class="flex items-center"><input type="file" id="profile-pic-upload" accept="image/*" class="hidden"><button id="upload-profile-pic-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-upload mr-2"></i> Upload</button><span id="profile-pic-filename" class="ml-3 text-sm text-gray-500 truncate max-w-xs">No file selected</span></div>
                                         <p class="text-xs text-gray-500 mt-1">Max size: 50KB (Auto-compressed)</p>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Personal Documents</label>
-                                        <div class="flex items-center mb-2">
-                                            <input type="file" id="document-upload" accept="image/*,.pdf" class="hidden" multiple>
-                                            <button id="upload-document-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                                                <i class="fas fa-plus mr-2"></i> Add Documents
-                                            </button>
-                                        </div>
+                                        <div class="flex items-center mb-2"><input type="file" id="document-upload" accept="image/*,.pdf" class="hidden" multiple><button id="upload-document-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"><i class="fas fa-plus mr-2"></i> Add Documents</button></div>
                                         <p class="text-xs text-gray-500 mb-3">Max size: 50KB each</p>
                                         <div id="documents-list" class="space-y-3"></div>
                                     </div>
@@ -342,42 +246,21 @@
                                 <div class="md:w-2/3">
                                     <h3 class="text-lg font-bold text-gray-800 mb-4">Student Details</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                        <div class="col-span-1 md:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Roll Number (For Attendance)</label>
-                                            <input type="text" id="student-roll-no" placeholder="e.g. 101" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        </div>
-                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label><input type="text" id="student-full-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label><input type="date" id="student-dob" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                                        <div class="col-span-1 md:col-span-2"><label class="block text-sm font-medium text-gray-700 mb-1">Roll Number</label><input type="text" id="student-roll-no" placeholder="e.g. 101" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label><input type="text" id="student-full-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label><input type="date" id="student-dob" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
                                         <div><label class="block text-sm font-medium text-gray-700 mb-1">Age</label><input type="text" id="student-age" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" readonly></div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Standard</label>
-                                            <select id="student-standard" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option value="8">8th Class</option><option value="9">9th Class</option><option value="10">10th Class</option><option value="graduated">Graduated</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                                            <select id="student-gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option value="male">Male</option><option value="female">Female</option>
-                                            </select>
-                                        </div>
-                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Address</label><input type="text" id="student-address" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Father's Name</label><input type="text" id="student-father-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Mother's Name</label><input type="text" id="student-mother-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Standard</label><select id="student-standard" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="8">8th Class</option><option value="9">9th Class</option><option value="10">10th Class</option><option value="graduated">Graduated</option></select></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Gender</label><select id="student-gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="male">Male</option><option value="female">Female</option></select></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Address</label><input type="text" id="student-address" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Father's Name</label><input type="text" id="student-father-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Mother's Name</label><input type="text" id="student-mother-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
                                     </div>
                                     <div class="mb-6">
-                                        <div class="flex justify-between items-center mb-3">
-                                            <h4 class="text-md font-bold text-gray-800">Additional Information</h4>
-                                            <button id="add-custom-field-btn" class="text-blue-600 hover:text-blue-800 flex items-center text-sm"><i class="fas fa-plus mr-1"></i> Add New Field</button>
-                                        </div>
+                                        <div class="flex justify-between items-center mb-3"><h4 class="text-md font-bold text-gray-800">Additional Information</h4><button id="add-custom-field-btn" class="text-blue-600 hover:text-blue-800 flex items-center text-sm"><i class="fas fa-plus mr-1"></i> Add New Field</button></div>
                                         <div id="custom-fields-container"></div>
                                         <div id="new-custom-field" class="mt-4 hidden">
-                                            <div class="flex items-center gap-2">
-                                                <input type="text" id="new-custom-field-name" placeholder="Field name" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
-                                                <input type="text" id="new-custom-field-value" placeholder="Value" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
-                                                <button id="save-custom-field-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Save</button>
-                                                <button id="cancel-custom-field-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button>
-                                            </div>
+                                            <div class="flex items-center gap-2"><input type="text" id="new-custom-field-name" placeholder="Field name" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg"><input type="text" id="new-custom-field-value" placeholder="Value" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg"><button id="save-custom-field-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Save</button><button id="cancel-custom-field-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button></div>
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +281,7 @@
                     <canvas id="face-canvas" class="absolute inset-0 w-full h-full"></canvas>
                 </div>
                 <div class="flex justify-center">
-                    <button id="capture-face-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center">
+                    <button id="capture-face-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center transition-transform active:scale-95">
                         <i class="fas fa-camera mr-2"></i> Capture & Save ID
                     </button>
                 </div>
@@ -407,7 +290,7 @@
         </div>
 
         <div id="promote-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Promote Students</h3>
                 <p class="text-gray-600 mb-6">Promote all students to next class?</p>
                 <div class="flex justify-end space-x-3">
@@ -423,6 +306,28 @@
                 <div class="flex justify-end space-x-3">
                     <button id="cancel-delete-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button>
                     <button id="confirm-delete-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tour-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[70] hidden">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden relative m-4">
+                <button id="close-tour-btn" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors z-10">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <div class="bg-gray-50 h-40 flex items-center justify-center border-b border-gray-100">
+                    <i id="tour-icon" class="fas fa-school text-6xl text-blue-600 transform transition-transform duration-500 hover:scale-110"></i>
+                </div>
+                <div class="p-8 text-center">
+                    <h3 id="tour-title" class="text-2xl font-bold text-gray-800 mb-4">Welcome</h3>
+                    <p id="tour-desc" class="text-gray-600 text-sm leading-relaxed mb-8 whitespace-pre-line text-left">
+                        Loading tour content...
+                    </p>
+                    <div id="tour-dots" class="flex justify-center space-x-2 mb-6"></div>
+                    <div class="flex justify-between items-center">
+                        <button id="tour-prev-btn" class="text-gray-500 hover:text-gray-800 font-medium px-4 py-2 disabled:opacity-50 transition-colors">Back</button>
+                        <button id="tour-next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-transform active:scale-95">Next</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -443,6 +348,7 @@
     <script src="js/ui.js"></script>
     <script src="js/db.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/tour_data.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
